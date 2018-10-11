@@ -43,7 +43,9 @@ class Board:
 		row1 = ('').join(board[0])
 		row2 = ('').join(board[1])
 		row3 = ('').join(board[2])
-		print (row1+'\n'+row2+'\n'+row3)
+
+		print('\n'+row1+'\n'+row2+'\n'+row3+'\n')
+		print('*******')
 
 	def add_move(self, move):
 		"""Adds move to moves attribute.
@@ -72,4 +74,8 @@ my_game = Game(board, p1, p2)
 # P1 make move
 first_move = Move(p1, [0,2])
 board.add_move(first_move)
+board.display()
+
+second_move = Move(p2, [2,1])
+board.add_move(second_move)
 board.display()
