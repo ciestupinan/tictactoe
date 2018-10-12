@@ -87,7 +87,8 @@ def random_move(player, board):
 
 
 def is_won(board):
-	pass
+	lst_moves = board.moves
+
 
 # -------------- MAIN -------------
 print("Ready to play tic-tac-toe against the computer?")
@@ -126,7 +127,7 @@ while True:
 	"""If the game is won, print the winner and end session."""
 	if is_won(board):
 		winner = is_won(board)
-		if winner == "Computer":
+		if winner == comp:
 			print("You lose!")
 		else:
 			print("Congrats {}! You win!".format(p1.name))
