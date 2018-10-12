@@ -1,4 +1,5 @@
 from pprint import pprint
+import random
 
 class Player:
 
@@ -35,10 +36,10 @@ class Board:
 			position = move.position
 			row,col = position
 
-			if player.player_name() == "P1":
-				board[row][col] = " X"
+			if player.player_name() == "Computer":
+				board[row][col] = " 0"
 			else:
-				board[row][col] = " O"
+				board[row][col] = " X"
 		
 		row1 = ('').join(board[0])
 		row2 = ('').join(board[1])
@@ -52,6 +53,13 @@ class Board:
 		Takes an instance of Move."""
 		self.moves.append(move)
 
+	def is_move(self, move):
+		for m in self.moves:
+			if move.position == m.position:
+				return True
+		return False
+
+
 
 class Game:
 	"""Game has one board, two players."""
@@ -63,19 +71,63 @@ class Game:
 		self.started_at = started_at
 		self.finished_at = finished_at
 
-# create a board + players
-p1 = Player('P1', 'X')
-p2 = Player('P2', 'O')
+
+def random_move(player, board):
+	row = random.randint(0,2)
+	col = random.randint(0,2)
+	move = Move(player,[row,col])
+	
+	"""If move is already taken, pick different coordinates."""
+	while board.is_move(move):
+		row = random.randint(0,2)
+		col = random.randint(0,2)
+		move = Move(player,[row,col])
+
+	return move
+
+
+def is_won(board):
+	pass
+
+# -------------- MAIN -------------
+print("Ready to play tic-tac-toe against the computer?")
+player_name = input("What's your name? ")
+print("\nHi, {}. You get to go first!".format(player_name))
+print("To make your move, input a row and column: ie. 1 0")
+
+# create a board + players + game
+p1 = Player(player_name, 'X')
+comp = Player('Computer', 'O')
 board = Board()
+game = Game(board, p1, comp)
 
-# create a game
-my_game = Game(board, p1, p2)
+while True:
+	p1_input = input("Make your move (row col): ")
+	p1_position = p1_input.split(" ")
+	p1_position = [int(i) for i in p1_position]
+	p1_move = Move(p1, p1_position)
+	
+	"""If the board position is taken, make user pick a new coordinate."""
+	while board.is_move(p1_move):
+		print("\nThat spot is taken! Try again.")
+		p1_input = input("Make your move (row col): ")
+		p1_position = p1_input.split(" ")
+		p1_position = [int(i) for i in p1_position]
+		p1_move = Move(p1, p1_position)
 
-# P1 make move
-first_move = Move(p1, [0,2])
-board.add_move(first_move)
-board.display()
+	board.add_move(p1_move)
+	board.display()
 
-second_move = Move(p2, [2,1])
-board.add_move(second_move)
-board.display()
+	print("Computer's turn.")
+	comp_move = random_move(comp, board)
+	board.add_move(comp_move)
+	board.display()
+
+	"""If the game is won, print the winner and end session."""
+	if is_won(board):
+		winner = is_won(board)
+		if winner == "Computer":
+			print("You lose!")
+		else:
+			print("Congrats {}! You win!".format(p1.name))
+		break
